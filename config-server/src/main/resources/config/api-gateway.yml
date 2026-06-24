@@ -1,0 +1,29 @@
+server:
+  port: 8080 # Port chạy ngoài cùng của toàn bộ hệ thống microservices
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        # Định tuyến cho Auth Service (sẽ làm ở bước sau)
+        - id: auth-service
+          uri: lb://auth-service # lb:// nghĩa là Load Balancing dựa vào tên đăng ký trên Eureka
+          predicates:
+            - Path=/auth/**
+
+        # Định tuyến cho Order Service (tích hợp Circuit Breaker)
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/orders/**
+          filters:
+            # Cấu hình Circuit Breaker cho luồng Order
+            - name: CircuitBreaker
+              args:
+                name: orderCircuitBreaker
+                fallbackUri: forward:/fallback/order-down
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/ # Đăng ký Gateway vào danh bạ Eureka
