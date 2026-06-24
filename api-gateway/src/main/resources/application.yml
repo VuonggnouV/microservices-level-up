@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: api-gateway # Tên file cấu hình tương ứng trên Config Server
+  config:
+    import: "optional:configserver:http://localhost:8888"
