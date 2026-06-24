@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: eureka-server # Tên này phải trùng khớp với file cấu hình trên Config Server
+  config:
+    import: "optional:configserver:http://localhost:8888" # Chỉ đường tới Config Server
